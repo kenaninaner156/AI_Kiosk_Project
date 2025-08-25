@@ -1,0 +1,55 @@
+﻿# AI Kiosk Project — Ön Kitapçık
+
+## 1. Amaç
+Otel, hastane ve kurumsal danışma noktalarında resepsiyon işini hafifletmek.
+Kiosk + 3D model + ChatGPT API kullanılarak ziyaretçilerle doğal sesli diyalog sağlamak.
+
+## 2. Çekirdek Akış
+1. STT (Speech-to-Text) → Kullanıcı sesi ChatGPT API ile yazıya çevrilir.
+2. AI İşlem Katmanı → Yazı ChatGPT API’ye gönderilir, cevap alınır.
+3. TTS (Text-to-Speech) → Cevap aynı API ile sesli üretilir.
+4. UE Metahuman Senkronu → Ses çıktısı ve state olayları 3D modele aktarılır.
+
+## 3. Klasör Yapısı
+admin_panel/ (frontend, backend)
+ai_core/ (stt, tts, orchestrator, knowledge)
+ue_integration/ (blueprints, c++, assets)
+tests/ (unit, integration)
+docs/ (belgeler, project_book.txt)
+scripts/ (yardımcı scriptler)
+
+## 4. Klasör İçerikleri
+- admin_panel: test sekmesi, şirket adı kaydetme, Q&A düzenleme
+- ai_core/stt: ChatGPT STT istemcisi
+- ai_core/tts: ChatGPT TTS istemcisi
+- ai_core/orchestrator: diyalog akışı
+- ai_core/knowledge: company.json, Q&A
+- ue_integration: state/event ve dudak senkronu
+- tests: birim ve uçtan uca testler
+- docs: proje belgeleri, project_book.txt
+- scripts: run_all.ps1 (servisleri başlatma)
+
+## 5. Teknolojiler
+OpenAI ChatGPT Realtime API (STT, TTS, AI)
+Python 3.13 + FastAPI
+Basit frontend (React veya HTML/JS)
+Unreal Engine 5.6.1 Metahuman
+Windows 11, Asus ROG G18 (RTX 4080, 64 GB RAM)
+
+## 6. Çalışma İlkeleri
+- Simple is the best → gereksiz modül yok
+- Tüm STT/TTS/AI işlemleri ChatGPT API’den geçer
+- Admin panel minimum işlev: test + şirket bilgisi kaydı
+- İlk sürüm lokal, finalde GitHub’a yükleme
+
+## 7. Performans Hedefleri
+STT < 400 ms
+TTS < 700 ms
+Toplam cevap < 2.5 s
+
+## 8. Yol Haritası
+1. Sprint-1: STT ve TTS istemcileri
+2. Sprint-2: Orchestrator + Admin Panel
+3. Sprint-3: UE entegrasyonu
+4. Sprint-4: Bilgi tabanı (company.json + Q&A)
+5. Final: GitHub yükleme + iyileştirme

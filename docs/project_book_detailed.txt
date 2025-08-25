@@ -1,0 +1,130 @@
+﻿# AI Kiosk Project — Detaylı Proje Kitabı
+
+## 1. Amaç
+Projenin hedefi, otel, hastane ve büyük şirketlerde danışma/resepsiyon iş yükünü azaltmak ve ziyaretçilere hızlı, doğru ve doğal bir şekilde bilgi sağlamaktır.
+Sistem kiosk formatında, ChatGPT API destekli, 3D Metahuman modeliyle entegre bir yapay zekâ danışmanı olarak çalışır.
+
+## 2. Temel Çalışma Akışı
+1. **STT (Speech-to-Text)**: Kullanıcının sesi ChatGPT API üzerinden yazıya çevrilir.
+2. **AI İşlem Katmanı**: Yazıya çevrilen içerik ChatGPT’ye gönderilir, niyet anlaşılır ve uygun cevap oluşturulur.
+3. **TTS (Text-to-Speech)**: Cevap aynı API üzerinden seslendirilir.
+4. **UE Entegrasyonu**: Ses çıktısı ve durum (dinliyor, düşünüyor, konuşuyor) bilgileri Metahuman modeline gönderilir. Dudak senkronizasyonu ve animasyon tetikleri devreye girer.
+
+## 3. Ana Teknolojiler
+- **OpenAI ChatGPT API**
+  - Realtime (STT+TTS+AI tek oturum)
+  - Alternatif: Text+Audio endpoint’leri
+- **Python 3.13 + FastAPI** (yerel köprü servisleri)
+- **Unreal Engine 5.6.1** (Metahuman animasyonu ve 3D sahne)
+- **Windows 11** ortamı
+- **Donanım**: Asus ROG Strix G18 (i9-13980HX, RTX 4080, 64 GB RAM)
+
+## 4. Klasör Yapısı ve İçerikleri
+AI_Kiosk_Project/
+│
+├── admin_panel/
+│ ├── frontend/ # Kullanıcı arayüzü (React/HTML/JS)
+│ └── backend/ # FastAPI tabanlı API (Ping, STT, TTS testleri)
+│
+├── ai_core/
+│ ├── stt/ # ChatGPT STT istemci kodu (API çağrısı)
+│ ├── tts/ # ChatGPT TTS istemci kodu (API çağrısı)
+│ ├── orchestrator/ # Diyalog akışı, niyet analizi, tool-calling
+│ └── knowledge/ # company.json (adres, telefon, vizyon, hizmetler)
+│
+├── ue_integration/
+│ ├── blueprints/ # Blueprint grafikleri (dinleme, konuşma, animasyon tetikleri)
+│ ├── c++/ # Gerekirse C++ köprü kodları
+│ └── assets/ # Dudak senk için viseme/phoneme verileri
+│
+├── tests/
+│ ├── unit/ # STT, TTS, Orchestrator fonksiyon testleri
+│ └── integration/ # Ses girişi → AI yanıtı → ses çıkışı uçtan uca testler
+│
+├── docs/
+│ ├── project_book.txt # Kısa versiyon
+│ └── project_book_detailed.txt # Bu dosya
+│
+└── scripts/
+├── run_all.ps1 # Servisleri başlatma
+└── init_env.ps1 # Ortam kurulum scripti
+
+markdown
+Kopyala
+Düzenle
+
+## 5. Admin Panel Özellikleri
+- **Test Sekmesi**
+  - Ping testi (backend canlı mı?)
+  - STT testi (mikrofondan ses → metin)
+  - TTS testi (metin → ses, oynatılabilir)
+- **AI Sekmesi**
+  - Şirket adı girme alanı
+  - “Kaydet/Öğren” butonu
+  - Çekilen bilgilerin listelenmesi (adres, telefon, vizyon, misyon)
+  - Q&A düzenleme ekranı (düzenlenebilir soru-cevap listesi)
+- **Ek Gereksinimler**
+  - Versiyonlama
+  - Test/canlı ortam ayrımı
+  - Loglama (sorular, cevaplar, hata kayıtları)
+  - Analitik (soru kategorileri, kullanım yoğunluğu)
+  - CSV/JSON içe-dışa aktarma
+  - Planlı güncelleme (şirket sitesini tarama)
+
+## 6. AI Core Özellikleri
+- **STT**: ChatGPT’nin ses → metin modeli
+- **TTS**: ChatGPT’nin metin → ses modeli
+- **Orchestrator**:
+  - Konuşma akışını yönetir
+  - State yönetimi: listening, thinking, speaking
+  - Tool-calling: Admin panel fonksiyonlarını tetikler
+- **Knowledge**:
+  - Şirket bilgileri JSON formatında saklanır
+  - Semantik arama ile benzer sorular bulunabilir
+  - İnsan onayı: Kritik cevaplar admin onayına sunulur
+
+## 7. Unreal Engine Entegrasyonu
+- **Animasyon Tetikleri**
+  - Dinleme: Karakter bekleme animasyonu
+  - Düşünme: Hafif idle animasyonu
+  - Konuşma: Dudak senkronizasyonu + el/baş hareketleri
+- **Dudak Senkronizasyonu**
+  - TTS API’den alınan phoneme zaman bilgileri → Metahuman blendshape hareketleri
+- **UE Köprü**
+  - Yerel WebSocket ile Python servisinden state/event bilgileri alınır
+
+## 8. Performans Hedefleri
+- STT gecikmesi < 400 ms
+- TTS gecikmesi < 700 ms
+- Toplam cevap süresi < 2.5 s
+- Admin panel test sekmesi bu ölçümleri gösterecek
+
+## 9. Test Planı
+- **Unit Testler**
+  - STT: Ses dosyası → doğru metin döndü mü?
+  - TTS: Metin → ses dosyası çalışıyor mu?
+  - Orchestrator: Input → AI → Output zinciri doğru mu?
+- **Integration Testler**
+  - Gerçek mikrofon kaydı → AI cevabı → ses oynatma
+  - UE ile tam entegrasyon testi (animasyon + ses)
+
+## 10. Yol Haritası
+1. Sprint-1: STT/TTS istemci kodları (API çağrıları)
+2. Sprint-2: Orchestrator + basit Admin panel (test ekranı)
+3. Sprint-3: UE entegrasyonu (state + dudak senk)
+4. Sprint-4: Knowledge (company.json + Q&A düzenleme)
+5. Sprint-5: Loglama + Analitik
+6. Final: GitHub’a yükleme, hata ayıklama, iyileştirme
+
+## 11. Riskler ve Çözümler
+- **API kesintisi** → Çevrimdışı mod (cache’ten sık sorular)
+- **Gecikme** → Öncelik küçük modeller + Realtime API
+- **UE entegrasyon zorluğu** → Basit WebSocket state/event aktarımı
+- **Çoklu dil** → İlk aşamada sadece TR/EN, sonra genişletme
+
+## 12. Gelecek Geliştirmeler
+- Çoklu kiosk desteği (tek veritabanına bağlı)
+- Göz takibi (kamera) ile doğal etkileşim
+- Daha zengin animasyon kütüphanesi
+- Mobil cihaz entegrasyonu
+- Kullanıcı memnuniyet ölçümü (buton/anket)
