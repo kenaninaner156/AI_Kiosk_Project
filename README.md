@@ -768,7 +768,7 @@ Gecikme hedefleri:
 
 
 
-> Not: Bu dosya \*\*taslaktır\*\*. Gerçek klasör ve dosya adlarıyla eşleştikçe güncelleyin.
+> Not: Bu dosya \*\*taslaktır\*\*. Gerçek klasör ve dosya adlarıyla eşleştikçe güncelleyin.+1
 
 
 
